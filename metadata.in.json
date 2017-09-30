@@ -1,0 +1,21 @@
+{
+    "id": "npr_one", 
+    "name": "NPR One", 
+    "home_url": "https://one.npr.org/", 
+    "maintainer_name": "Jiří Janoušek", 
+    "maintainer_link": "https://github.com/fenryxo", 
+    "version_major": 1, 
+    "version_minor": 0, 
+    "api_major": 4, 
+    "api_minor": 7, 
+    "categories": "AudioVideo;Audio;", 
+    "requirements": "Feature[Flash] Codec[MP3]", 
+    "license": "BSD-2-Clause; CC-BY-SA-3.0", 
+    "build": {
+        "icons": [
+            "src/icon.svg SCALABLE 64 128 256", 
+            "src/icon-xs.svg 16 22 24", 
+            "src/icon-sm.svg 32 48"
+        ]
+    }
+}
