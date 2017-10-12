@@ -1,7 +1,7 @@
 NPR One Change Log
 ======================
 
-1.1 - unreleased
-----------------
+1.0 - October 12th, 2017
+---------------------
 
-  * Initial release.
+  * Initial release. Issue: tiliado/nuvolaruntime#345
