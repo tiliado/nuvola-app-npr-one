@@ -7,9 +7,9 @@
     "version_major": 1, 
     "version_minor": 0, 
     "api_major": 4, 
-    "api_minor": 7, 
+    "api_minor": 8, 
     "categories": "AudioVideo;Audio;", 
-    "requirements": "Feature[Flash] Codec[MP3]", 
+    "requirements": "Codec[MP3]", 
     "license": "BSD-2-Clause; CC-BY-SA-3.0", 
     "build": {
         "icons": [

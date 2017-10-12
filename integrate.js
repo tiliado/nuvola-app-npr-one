@@ -38,30 +38,32 @@ var PlayerAction = Nuvola.PlayerAction;
 var WebApp = Nuvola.$WebApp();
 
 // Initialization routines
-WebApp._onInitWebWorker = function(emitter)
-{
+WebApp._onInitWebWorker = function(emitter) {
     Nuvola.WebApp._onInitWebWorker.call(this, emitter);
 
     var state = document.readyState;
-    if (state === "interactive" || state === "complete")
+    if (state === "interactive" || state === "complete") {
         this._onPageReady();
-    else
+    } else {
         document.addEventListener("DOMContentLoaded", this._onPageReady.bind(this));
+    }
 }
 
 // Page is ready for magic
-WebApp._onPageReady = function()
-{
+WebApp._onPageReady = function() {
     // Connect handler for signal ActionActivated
     Nuvola.actions.connect("ActionActivated", this);
 
     // Start update routine
+    this.volume = null;
     this.update();
 }
 
 // Extract data from the web page
-WebApp.update = function()
-{
+WebApp.update = function() {
+    var state = PlaybackState.UNKNOWN;
+    var elms = this.getElements();
+    var time = this.parseTime(elms.timer);
     var track = {
         title: null,
         artist: null,
@@ -69,17 +71,137 @@ WebApp.update = function()
         artLocation: null,
         rating: null
     }
-
+    var elm = document.querySelector('story-card header h1');
+    if (elm) {
+        track.title = elm.innerText || null
+    }
+    elm = document.querySelector('story-card .card__meta');
+    if (elm && elm.firstElementChild) {
+        track.album = elm.firstElementChild.innerText.trim() || null
+    }
+    elm = document.querySelector('story-card aside figure img');
+    if (elm) {
+        track.artLocation = elm.src || null
+    }
+    track.length = time ? time[1] : null
     player.setTrack(track);
-    player.setPlaybackState(PlaybackState.UNKNOWN);
-
+    
+    if (elms.play) {
+        state = PlaybackState.PAUSED;
+    } else if (elms.pause) {
+        state = PlaybackState.PLAYING;
+    }
+    player.setPlaybackState(state);
+    player.setCanPlay(!!elms.play);
+    player.setCanPause(!!elms.pause);
+    player.setCanGoPrev(!!elms.prev);
+    player.setCanGoNext(!!elms.next);
+    player.setTrackPosition(time ? time[0] : null);
+    player.setCanSeek(state !== PlaybackState.UNKNOWN);
+    
+    if (this.volume === null && elms.volumeButton) {
+        Nuvola.clickOnElement(elms.volumeButton);
+    }
+    var height = elms.volumeValue ? elms.volumeValue.style.height : null;
+    if (height !== null && height.endsWith('%')) {
+        this.volume = (height.substr(0, height.length - 1) * 1) / 100;
+    }
+    player.updateVolume(this.volume);
+    player.setCanChangeVolume(!!elms.volumeButton);
+    
     // Schedule the next update
     setTimeout(this.update.bind(this), 500);
 }
 
+WebApp.getElements = function () {
+    var elms = {
+        player: document.querySelector('player')
+    }
+    if (elms.player) {
+        var playPause = elms.player.querySelector('toggle-play button');
+        elms.pause = playPause.querySelector('.player__play-control__icon--pause') ? playPause : null;
+        elms.play = playPause.querySelector('.player__play-control__icon--play') ? playPause : null;
+        if (elms.play || elms.pause) {
+            elms.prev = elms.player.querySelector('rewind button');
+            elms.next = elms.player.querySelector('skip button');
+            elms.timer = elms.player.querySelector('progress-bar .player__progress-bar__time');
+            elms.progressBar = elms.player.querySelector('progress-bar .player__progress-bar__seek-bar');
+        }
+        elms.volumeValue = elms.player.querySelector('volume-controls .player__volume-menu__volume-bar__value');
+        elms.volumeButton = elms.player.querySelector('volume-controls button');
+    }
+    return elms;
+}
+
+WebApp.parseTime = function (timer) {
+    if (timer && timer.innerText) {
+        var time = timer.innerText.split("/");
+        time[0] = Nuvola.parseTimeUsec(time[0]);
+        time[1] = Nuvola.parseTimeUsec(time[1]);
+        return time;
+    } else {
+        return null;
+    }
+}
+
 // Handler of playback actions
-WebApp._onActionActivated = function(emitter, name, param)
-{
+WebApp._onActionActivated = function(emitter, name, param) {
+    var elms = this.getElements();
+    switch (name) {
+    case PlayerAction.TOGGLE_PLAY:
+        if (elms.play) {
+            Nuvola.clickOnElement(elms.play)
+        } else if (elms.pause) {
+            Nuvola.clickOnElement(elms.pause)
+        }
+        break
+    case PlayerAction.PLAY:
+        if (elms.play) {
+            Nuvola.clickOnElement(elms.play)
+        }
+        break;
+    case PlayerAction.PAUSE:
+    case PlayerAction.STOP:
+        if (elms.pause) {
+            Nuvola.clickOnElement(elms.pause)
+        }
+        break;
+    case PlayerAction.PREV_SONG:
+        if (elms.prev) {
+            Nuvola.clickOnElement(elms.prev)
+        }
+        break;
+    case PlayerAction.NEXT_SONG:
+        if (elms.next) {
+            Nuvola.clickOnElement(elms.pause)
+        }
+        break;
+    case PlayerAction.SEEK:
+        var time = this.parseTime(elms.timer);
+        if (time && elms.progressBar) {
+            var total = time[1];
+            if (param >= 0 && param <= total) {
+                Nuvola.clickOnElement(elms.progressBar, param/total, 0.5);
+            }
+        }
+        break;
+    case PlayerAction.CHANGE_VOLUME:
+        var getSlider = () => elms.player.querySelector('volume-controls .player__volume-menu__volume-bar');
+        if (elms.volumeButton) {
+            if (!getSlider()) {
+                Nuvola.clickOnElement(elms.volumeButton);
+            }
+            window.setTimeout(() => {
+                var slider = getSlider();
+                if (slider) {
+                    Nuvola.clickOnElement(slider, 0.5, 1.0 - param);
+                    this.volume = param;
+                    Nuvola.clickOnElement(elms.volumeButton);
+                }
+            }, 10);
+        }
+        break;
+    }
 }
 
 WebApp.start();
