@@ -1,16 +1,21 @@
-NPR One (Nuvola App)
-==================
+NPR One • Nuvola Apps Runtime
+=============================
 
 Integration of NPR One into your linux desktop via
 [Nuvola Apps Runtime](https://github.com/tiliado/nuvolaruntime).
- 
+
 Support
 -------
 
-Report bugs and issues at <https://github.com/tiliado/nuvola-app-npr-one/issues>.
+Follow [Bug reporting guidelines](https://github.com/tiliado/nuvolaruntime/wiki/Bug-Reporting-Guidelines).
 
 Installation
 ------------
+
+Install the [genuine cross-distribution flatpak packages](https://nuvola.tiliado.eu/app/mpr-one/).
+
+Building
+--------
 
 This project uses [Nuvola SDK](https://github.com/tiliado/nuvolasdk#create-new-project). Please refer to
 the [Build a Project Using Nuvola SDK](https://github.com/tiliado/nuvolasdk#build-a-project-using-nuvola-sdk)
