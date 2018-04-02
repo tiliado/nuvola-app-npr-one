@@ -7,9 +7,9 @@
   "version_major": 1,
   "version_minor": 0,
   "api_major": 4,
-  "api_minor": 8,
+  "api_minor": 10,
   "categories": "AudioVideo;Audio;",
-  "requirements": "Codec[MP3]",
+  "requirements": "Chromium[63] Codec[MP3] Feature[MSE]",
   "license": "BSD-2-Clause; CC-BY-SA-3.0",
   "build": {
     "icons": [
