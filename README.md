@@ -12,7 +12,7 @@ Follow [Bug reporting guidelines](https://github.com/tiliado/nuvolaruntime/wiki/
 Installation
 ------------
 
-Install the [genuine cross-distribution flatpak packages](https://nuvola.tiliado.eu/app/mpr-one/).
+Install the [genuine cross-distribution flatpak packages](https://nuvola.tiliado.eu/app/npr_one/).
 
 Building
 --------
