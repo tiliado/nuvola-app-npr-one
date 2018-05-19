@@ -40,5 +40,5 @@ Copyright
     + License: [CC-BY-3.0](./LICENSE-CC-BY.txt)
 
   - Other files:
-    + Copyright 2017 Jiří Janoušek <janousek.jiri@gmail.com>
+    + Copyright 2017-2018 Jiří Janoušek <janousek.jiri@gmail.com>
     + License: [2-Clause BSD-license](./LICENSE-BSD.txt)
