@@ -202,5 +202,17 @@
     }
   }
 
+  WebApp._onNavigationRequest = function (emitter, request) {
+    if (request.url === 'https://www.npr.org/') {
+      // choice.npr.org redirects to 'https://www.npr.org/' regardless of the original domain (one.npr.org)
+      // Let's go to the home page instead of showing www.npr.org in a new window.
+      request.url = 'https://one.npr.org/'
+      request.approved = true
+    } else {
+      // Apply URL filter otherwise
+      Nuvola.WebApp._onNavigationRequest.call(this, emitter, request)
+    }
+  }
+
   WebApp.start()
 })(this)  // function(Nuvola)
