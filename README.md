@@ -1,4 +1,4 @@
-NPR One • Nuvola Apps Runtime
+NPR One • Nuvola Apps Runtime [![CircleCI](https://circleci.com/gh/tiliado/nuvola-app-npr-one/tree/master.svg?style=svg)](https://circleci.com/gh/tiliado/nuvola-app-npr-one/tree/master)
 =============================
 
 Integration of NPR One into your linux desktop via
