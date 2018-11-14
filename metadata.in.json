@@ -2,7 +2,7 @@
   "id": "npr_one",
   "name": "NPR One",
   "home_url": "https://one.npr.org/",
-  "allowed_uri": "^https://(one|choice)\\.npr\\.org(/.*)?$",
+  "allowed_uri": "^https://((one|choice|authorization\\.api|login)\\.npr\\.org|.*\\.npr\\.org/(account|oauth2))(/.*)?$",
   "maintainer_name": "Jiří Janoušek",
   "maintainer_link": "https://github.com/fenryxo",
   "version_major": 1,
