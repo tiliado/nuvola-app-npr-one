@@ -1,6 +1,9 @@
 NPR One Change Log
 ======================
 
+1.2 - December 27th, 2018
+-------------------------
+
   * The filter of external addresses was adjusted to allow NPR One login pages. Issue: tiliado/nuvolaruntime#481
 
 1.1 - May 19th, 2018
