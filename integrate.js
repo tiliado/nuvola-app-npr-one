@@ -26,20 +26,20 @@
 
 (function (Nuvola) {
   // Create media player component
-  var player = Nuvola.$object(Nuvola.MediaPlayer)
+  const player = Nuvola.$object(Nuvola.MediaPlayer)
 
   // Handy aliases
-  var PlaybackState = Nuvola.PlaybackState
-  var PlayerAction = Nuvola.PlayerAction
+  const PlaybackState = Nuvola.PlaybackState
+  const PlayerAction = Nuvola.PlayerAction
 
   // Create new WebApp prototype
-  var WebApp = Nuvola.$WebApp()
+  const WebApp = Nuvola.$WebApp()
 
   // Initialization routines
   WebApp._onInitWebWorker = function (emitter) {
     Nuvola.WebApp._onInitWebWorker.call(this, emitter)
 
-    var state = document.readyState
+    const state = document.readyState
     if (state === 'interactive' || state === 'complete') {
       this._onPageReady()
     } else {
@@ -59,17 +59,17 @@
 
   // Extract data from the web page
   WebApp.update = function () {
-    var state = PlaybackState.UNKNOWN
-    var elms = this.getElements()
-    var time = this.parseTime(elms.timer)
-    var track = {
+    let state = PlaybackState.UNKNOWN
+    const elms = this.getElements()
+    const time = this.parseTime(elms.timer)
+    const track = {
       title: null,
       artist: null,
       album: null,
       artLocation: null,
       rating: null
     }
-    var elm = document.querySelector('story-card header h1')
+    let elm = document.querySelector('story-card header h1')
     if (elm) {
       track.title = elm.innerText || null
     }
@@ -100,7 +100,7 @@
     if (this.volume === null && elms.volumeButton) {
       Nuvola.clickOnElement(elms.volumeButton)
     }
-    var height = elms.volumeValue ? elms.volumeValue.style.height : null
+    const height = elms.volumeValue ? elms.volumeValue.style.height : null
     if (height !== null && height.endsWith('%')) {
       this.volume = (height.substr(0, height.length - 1) * 1) / 100
     }
@@ -112,11 +112,11 @@
   }
 
   WebApp.getElements = function () {
-    var elms = {
+    const elms = {
       player: document.querySelector('player')
     }
     if (elms.player) {
-      var playPause = elms.player.querySelector('toggle-play button')
+      const playPause = elms.player.querySelector('toggle-play button')
       elms.pause = playPause.querySelector('.player__play-control__icon--pause') ? playPause : null
       elms.play = playPause.querySelector('.player__play-control__icon--play') ? playPause : null
       if (elms.play || elms.pause) {
@@ -133,7 +133,7 @@
 
   WebApp.parseTime = function (timer) {
     if (timer && timer.innerText) {
-      var time = timer.innerText.split('/')
+      const time = timer.innerText.split('/')
       time[0] = Nuvola.parseTimeUsec(time[0])
       time[1] = Nuvola.parseTimeUsec(time[1])
       return time
@@ -144,7 +144,7 @@
 
   // Handler of playback actions
   WebApp._onActionActivated = function (emitter, name, param) {
-    var elms = this.getElements()
+    const elms = this.getElements()
     switch (name) {
       case PlayerAction.TOGGLE_PLAY:
         if (elms.play) {
@@ -174,23 +174,24 @@
           Nuvola.clickOnElement(elms.next)
         }
         break
-      case PlayerAction.SEEK:
-        var time = this.parseTime(elms.timer)
+      case PlayerAction.SEEK: {
+        const time = this.parseTime(elms.timer)
         if (time && elms.progressBar) {
-          var total = time[1]
+          const total = time[1]
           if (param >= 0 && param <= total) {
             Nuvola.clickOnElement(elms.progressBar, param / total, 0.5)
           }
         }
         break
-      case PlayerAction.CHANGE_VOLUME:
-        var getSlider = () => elms.player.querySelector('volume-controls .player__volume-menu__volume-bar')
+      }
+      case PlayerAction.CHANGE_VOLUME: {
+        const getSlider = () => elms.player.querySelector('volume-controls .player__volume-menu__volume-bar')
         if (elms.volumeButton) {
           if (!getSlider()) {
             Nuvola.clickOnElement(elms.volumeButton)
           }
           window.setTimeout(() => {
-            var slider = getSlider()
+            const slider = getSlider()
             if (slider) {
               Nuvola.clickOnElement(slider, 0.5, 1.0 - param)
               this.volume = param
@@ -199,6 +200,7 @@
           }, 10)
         }
         break
+      }
     }
   }
 
